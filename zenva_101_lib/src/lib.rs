@@ -38,19 +38,34 @@ impl Player {
         let input = Input::godot_singleton();
 
         if input.is_action_pressed("move_right", false) {
-            self.velocity.x += self.speed
+            godot_print!("In right");
+            self.velocity.x += self.speed;
         } else if input.is_action_pressed("move_left", false) {
-            self.velocity.x -= self.speed
-        };
+            godot_print!("In left");
+            self.velocity.x -= self.speed;
+        }
 
         self.velocity = kb2d_move_and_slide(base, self.velocity, None);
+
+        self.velocity.y += GRAVITY as f32 * delta;
+
+        // if input.is_action_just_pressed("jump", false) {
+        if input.is_action_just_pressed("jump", false) && base.is_on_floor() {
+            godot_print!("In Jump");
+            self.velocity.y -= JUMP_FORCE as f32;
+        }
+
+        let sprite = unsafe { base.get_node_as::<Sprite>("Sprite").unwrap() };
+        if self.velocity.x < 0.0 {
+            sprite.set_flip_h(true);
+        } else if self.velocity.x > 0.0 {
+            sprite.set_flip_h(false);
+        }
     }
 }
 
 // Registers all exposed classes to Godot.
 fn init(handle: InitHandle) {
-    // Register HelloWorld
-    // handle.add_class::<HelloWorld>();
     handle.add_class::<Player>();
 }
 

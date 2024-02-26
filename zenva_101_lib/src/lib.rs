@@ -59,6 +59,12 @@ impl Player {
             sprite.set_flip_h(false);
         }
     }
+
+    #[method]
+    fn die(&self, #[base] base: &KinematicBody2D) {
+        let st = unsafe { base.get_tree().unwrap().assume_safe() };
+        st.reload_current_scene().unwrap();
+    }
 }
 
 #[derive(NativeClass)]
@@ -121,6 +127,16 @@ impl Enemy {
                 self.target_position = base.position().x + self.move_distance;
             } else {
                 self.target_position = self.start_position;
+            }
+        }
+    }
+
+    #[method]
+    fn _on_Enemy_body_entered(&self, #[base] base: &Area2D, body: Ref<KinematicBody2D>) {
+        let body = unsafe { body.assume_safe() };
+        if body.name() == "Player".into() {
+            unsafe {
+                body.call("die", &[]);
             }
         }
     }

@@ -1,4 +1,4 @@
-use gdnative::api::Area2D;
+use gdnative::api::{Area2D, Camera2D};
 use gdnative::prelude::*;
 use godot_sane_defaults::kb2d_move_and_slide;
 
@@ -131,6 +131,7 @@ impl Enemy {
         }
     }
 
+    // TODO: get around snake case issues.
     #[method]
     fn _on_Enemy_body_entered(&self, #[base] base: &Area2D, body: Ref<KinematicBody2D>) {
         let body = unsafe { body.assume_safe() };
@@ -142,10 +143,37 @@ impl Enemy {
     }
 }
 
+#[derive(NativeClass)]
+#[inherit(Camera2D)]
+pub struct CameraController {}
+
+#[methods]
+impl CameraController {
+    fn new(_base: &Camera2D) -> Self {
+        CameraController {}
+    }
+
+    fn get_player(base: &Camera2D) -> Option<TRef<'static, KinematicBody2D>> {
+        unsafe { base.get_node_as::<KinematicBody2D>("/root/MainScene/Player") }
+    }
+
+    #[method]
+    fn _process(&mut self, #[base] base: &Camera2D, delta: f32) {
+        let x = CameraController::get_player(base).unwrap().position().x;
+        base.set_position(Vector2::new(x, base.position().y))
+    }
+
+    #[method]
+    fn _ready(&self, #[base] _base: &Camera2D) {
+        godot_print!("Hello, Godot, from Camera!")
+    }
+}
+
 // Registers all exposed classes to Godot.
 fn init(handle: InitHandle) {
     handle.add_class::<Player>();
     handle.add_class::<Enemy>();
+    handle.add_class::<CameraController>();
 }
 
 // Creates entry-points of dyn lib.

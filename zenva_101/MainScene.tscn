@@ -1,13 +1,14 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Tile.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Enemy.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Camera2D.gdns" type="Script" id=4]
 
 [node name="MainScene" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 40, 464 )
+position = Vector2( 152, 8 )
 
 [node name="Tile2" parent="." instance=ExtResource( 2 )]
 position = Vector2( 224, 560 )
@@ -46,16 +47,16 @@ position = Vector2( 672, 560 )
 position = Vector2( 736, 560 )
 
 [node name="Tile13" parent="." instance=ExtResource( 2 )]
-position = Vector2( 800, 536 )
+position = Vector2( 800, 560 )
 
 [node name="Tile14" parent="." instance=ExtResource( 2 )]
-position = Vector2( 864, 504 )
+position = Vector2( 864, 560 )
 
 [node name="Tile15" parent="." instance=ExtResource( 2 )]
-position = Vector2( 928, 472 )
+position = Vector2( 928, 560 )
 
 [node name="Tile16" parent="." instance=ExtResource( 2 )]
-position = Vector2( 992, 416 )
+position = Vector2( 992, 560 )
 
 [node name="Tile17" parent="." instance=ExtResource( 2 )]
 position = Vector2( 864, 336 )
@@ -67,58 +68,58 @@ position = Vector2( 800, 336 )
 position = Vector2( 736, 336 )
 
 [node name="Tile20" parent="." instance=ExtResource( 2 )]
-position = Vector2( 672, 312 )
+position = Vector2( 672, 160 )
 
 [node name="Tile21" parent="." instance=ExtResource( 2 )]
-position = Vector2( 608, 280 )
+position = Vector2( 608, 344 )
 
 [node name="Tile22" parent="." instance=ExtResource( 2 )]
-position = Vector2( 480, 328 )
+position = Vector2( 544, 344 )
 
 [node name="Tile23" parent="." instance=ExtResource( 2 )]
-position = Vector2( 416, 328 )
+position = Vector2( 416, 304 )
 
 [node name="Tile24" parent="." instance=ExtResource( 2 )]
 position = Vector2( 352, 304 )
 
 [node name="Tile25" parent="." instance=ExtResource( 2 )]
-position = Vector2( 288, 280 )
+position = Vector2( 288, 304 )
 
 [node name="Tile26" parent="." instance=ExtResource( 2 )]
-position = Vector2( 224, 240 )
+position = Vector2( 224, 96 )
 
 [node name="Tile27" parent="." instance=ExtResource( 2 )]
-position = Vector2( 160, 200 )
+position = Vector2( 160, 96 )
 
 [node name="Tile28" parent="." instance=ExtResource( 2 )]
-position = Vector2( 288, 104 )
+position = Vector2( 288, 96 )
 
 [node name="Tile29" parent="." instance=ExtResource( 2 )]
-position = Vector2( 352, 136 )
+position = Vector2( 32, 96 )
 
 [node name="Tile30" parent="." instance=ExtResource( 2 )]
-position = Vector2( 416, 136 )
+position = Vector2( 96, 96 )
 
 [node name="Tile31" parent="." instance=ExtResource( 2 )]
-position = Vector2( 480, 120 )
+position = Vector2( 480, 160 )
 
 [node name="Tile32" parent="." instance=ExtResource( 2 )]
-position = Vector2( 544, 96 )
+position = Vector2( 544, 160 )
 
 [node name="Tile33" parent="." instance=ExtResource( 2 )]
-position = Vector2( 608, 96 )
+position = Vector2( 608, 160 )
 
 [node name="Tile34" parent="." instance=ExtResource( 2 )]
-position = Vector2( 672, 96 )
+position = Vector2( 480, 96 )
 
 [node name="Tile35" parent="." instance=ExtResource( 2 )]
-position = Vector2( 736, 88 )
+position = Vector2( 736, 96 )
 
 [node name="Tile36" parent="." instance=ExtResource( 2 )]
-position = Vector2( 800, 72 )
+position = Vector2( 800, 96 )
 
 [node name="Tile37" parent="." instance=ExtResource( 2 )]
-position = Vector2( 864, 72 )
+position = Vector2( 864, 32 )
 
 [node name="Tile38" parent="." instance=ExtResource( 2 )]
 position = Vector2( 160, 496 )
@@ -130,3 +131,8 @@ position = Vector2( 608, 496 )
 position = Vector2( 224, 496 )
 speed = 400.0
 move_distance = 320.0
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 512, 304 )
+current = true
+script = ExtResource( 4 )

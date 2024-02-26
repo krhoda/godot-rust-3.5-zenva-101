@@ -202,6 +202,19 @@ impl Coin {
         let next = self.rotation_speed * delta;
         base.set_rotation_degrees(base.rotation_degrees() + next as f64);
     }
+
+    #[method]
+    fn _on_coin_body_entered(&self, #[base] base: &Area2D, body: Ref<KinematicBody2D>) {
+        godot_print!("In Coin Entered");
+        let body = unsafe { body.assume_safe() };
+        if body.name() == "Player".into() {
+            unsafe {
+                body.call("collect_coin", &[self.value.to_variant()]);
+            }
+        }
+
+        base.queue_free();
+    }
 }
 
 // Registers all exposed classes to Godot.

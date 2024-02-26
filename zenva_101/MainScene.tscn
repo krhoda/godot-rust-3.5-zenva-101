@@ -128,9 +128,6 @@ position = Vector2( 160, 496 )
 [node name="Tile39" parent="." instance=ExtResource( 2 )]
 position = Vector2( 608, 496 )
 
-[node name="Coin" parent="." instance=ExtResource( 5 )]
-position = Vector2( 288, 224 )
-
 [node name="Enemy" parent="." instance=ExtResource( 3 )]
 position = Vector2( 224, 496 )
 speed = 400.0
@@ -140,3 +137,6 @@ move_distance = 320.0
 position = Vector2( 512, 304 )
 current = true
 script = ExtResource( 4 )
+
+[node name="Coin" parent="." instance=ExtResource( 5 )]
+position = Vector2( 48, 8 )

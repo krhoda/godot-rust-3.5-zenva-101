@@ -65,6 +65,11 @@ impl Player {
         let st = unsafe { base.get_tree().unwrap().assume_safe() };
         st.reload_current_scene().unwrap();
     }
+
+    #[method]
+    fn collect_coin(&mut self, #[base] _base: &KinematicBody2D, value: i32) {
+        self.score += value;
+    }
 }
 
 #[derive(NativeClass)]
@@ -169,11 +174,42 @@ impl CameraController {
     }
 }
 
+#[derive(NativeClass)]
+#[inherit(Area2D)]
+pub struct Coin {
+    #[property(default = 90.0)]
+    rotation_speed: f32,
+    #[property(default = 1)]
+    value: i32,
+}
+
+#[methods]
+impl Coin {
+    fn new(_base: &Area2D) -> Self {
+        Coin {
+            rotation_speed: 90.0,
+            value: 1,
+        }
+    }
+
+    #[method]
+    fn _ready(&self, #[base] _base: &Area2D) {
+        godot_print!("Hello, Godot, from Coin!")
+    }
+
+    #[method]
+    fn _process(&self, #[base] base: &Area2D, delta: f32) {
+        let next = self.rotation_speed * delta;
+        base.set_rotation_degrees(base.rotation_degrees() + next as f64);
+    }
+}
+
 // Registers all exposed classes to Godot.
 fn init(handle: InitHandle) {
     handle.add_class::<Player>();
     handle.add_class::<Enemy>();
     handle.add_class::<CameraController>();
+    handle.add_class::<Coin>();
 }
 
 // Creates entry-points of dyn lib.

@@ -1,4 +1,4 @@
-use gdnative::api::{Area2D, Camera2D};
+use gdnative::api::{Area2D, AudioStream, AudioStreamPlayer2D, Camera2D};
 use gdnative::prelude::*;
 use godot_sane_defaults::kb2d_move_and_slide;
 
@@ -73,10 +73,19 @@ impl Player {
         unsafe {
             ui.call("set_score_text", &[self.score.to_variant()]);
         }
+
+        let audio_player = Player::get_audio_player(base).unwrap();
+        unsafe {
+            audio_player.call("play_coin_sfx", &[]);
+        }
     }
 
     fn get_ui(base: &KinematicBody2D) -> Option<TRef<'static, Control>> {
         unsafe { base.get_node_as::<Control>("/root/MainScene/CanvasLayer/UI") }
+    }
+
+    fn get_audio_player(base: &KinematicBody2D) -> Option<TRef<'static, AudioStreamPlayer2D>> {
+        unsafe { base.get_node_as::<AudioStreamPlayer2D>("/root/MainScene/AudioPlayer") }
     }
 }
 
@@ -224,6 +233,7 @@ impl Coin {
         base.queue_free();
     }
 }
+
 #[derive(NativeClass)]
 #[inherit(Control)]
 pub struct UI {}
@@ -252,6 +262,31 @@ impl UI {
     }
 }
 
+#[derive(NativeClass)]
+#[inherit(AudioStreamPlayer2D)]
+pub struct AudioPlayer {}
+
+#[methods]
+impl AudioPlayer {
+    fn new(_base: &AudioStreamPlayer2D) -> Self {
+        AudioPlayer {}
+    }
+
+    fn get_coin() -> Ref<AudioStream> {
+        ResourceLoader::godot_singleton()
+            .load("res://Audio/coin.tres", "AudioStream", false)
+            .unwrap()
+            .cast::<AudioStream>()
+            .unwrap()
+    }
+
+    #[method]
+    fn play_coin_sfx(&self, #[base] base: &AudioStreamPlayer2D) {
+        base.set_stream(AudioPlayer::get_coin());
+        base.play(0.0);
+    }
+}
+
 // Registers all exposed classes to Godot.
 fn init(handle: InitHandle) {
     handle.add_class::<Player>();
@@ -259,6 +294,7 @@ fn init(handle: InitHandle) {
     handle.add_class::<CameraController>();
     handle.add_class::<Coin>();
     handle.add_class::<UI>();
+    handle.add_class::<AudioPlayer>();
 }
 
 // Creates entry-points of dyn lib.

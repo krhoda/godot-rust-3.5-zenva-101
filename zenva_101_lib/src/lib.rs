@@ -67,8 +67,16 @@ impl Player {
     }
 
     #[method]
-    fn collect_coin(&mut self, #[base] _base: &KinematicBody2D, value: i32) {
+    fn collect_coin(&mut self, #[base] base: &KinematicBody2D, value: i32) {
         self.score += value;
+        let ui = Player::get_ui(base).unwrap();
+        unsafe {
+            ui.call("set_score_text", &[self.score.to_variant()]);
+        }
+    }
+
+    fn get_ui(base: &KinematicBody2D) -> Option<TRef<'static, Control>> {
+        unsafe { base.get_node_as::<Control>("/root/MainScene/CanvasLayer/UI") }
     }
 }
 
@@ -216,6 +224,33 @@ impl Coin {
         base.queue_free();
     }
 }
+#[derive(NativeClass)]
+#[inherit(Control)]
+pub struct UI {}
+
+#[methods]
+impl UI {
+    fn new(base: &Control) -> Self {
+        UI {}
+    }
+
+    fn get_score_text(base: &Control) -> Option<TRef<'static, Label>> {
+        unsafe { base.get_node_as::<Label>("ScoreText") }
+    }
+
+    #[method]
+    fn _ready(&self, #[base] base: &Control) {
+        godot_print!("Hello from UI");
+        let score_text = UI::get_score_text(base).unwrap();
+        score_text.set_text("0");
+    }
+
+    #[method]
+    fn set_score_text(&self, #[base] base: &Control, score: i32) {
+        let score_text = UI::get_score_text(base).unwrap();
+        score_text.set_text(format!("{}", score));
+    }
+}
 
 // Registers all exposed classes to Godot.
 fn init(handle: InitHandle) {
@@ -223,6 +258,7 @@ fn init(handle: InitHandle) {
     handle.add_class::<Enemy>();
     handle.add_class::<CameraController>();
     handle.add_class::<Coin>();
+    handle.add_class::<UI>();
 }
 
 // Creates entry-points of dyn lib.
